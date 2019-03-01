@@ -1,3 +1,4 @@
+# Installing lamp
 ---
 - hosts: 10.18.12.145
   become: true
