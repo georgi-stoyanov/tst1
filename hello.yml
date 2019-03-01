@@ -1,1 +1,31 @@
-#hello how r u 
+---
+- hosts: 10.18.12.145
+  become: true
+  become_user: root
+  tasks:
+    - name: install httpd
+      yum:
+        name: httpd
+
+    - name: install php and maria db
+      yum: name={{item}} state=installed
+      with_items:
+      - php
+      - php-mysql
+      - php-pdo
+      - php-gd
+      - php-mbstring
+      - mariadb-server
+      - mariadb
+    - name: copy file
+      shell: echo "<?php phpinfo (); ?>" > /var/www/html/info.php
+    - name: Insert Index Page
+      template:
+        src: /etc/ansible/templates/index.html
+        dest: /var/www/html/index.html
+        backup: yes
+    - name: Start service httpd, if not started
+      service:
+        name: httpd
+        state: started
+        enabled: yes
